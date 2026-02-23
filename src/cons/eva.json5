@@ -1,0 +1,38 @@
+{
+  "factor": {
+    "dbName": "dfs://dayFactorFut",
+    "tbName": "pt",
+    "dateCol": "tradeDate",
+    "symbolCol": "symbol",
+    "indicatorCol": "factor",
+    "valueCol": "value",
+    "condition": "symbol not in ['SCTAS.INE','ZC.ZCE']"
+  },
+  "label": {
+    "dbName": "dfs://dayLabel",
+    "tbName": "futureLabel",
+    "dateCol": "tradeDate",
+    "labelDateCol": "minDate",
+    "symbolCol": "cont",
+    "indicatorCol": "label",
+    "valueCol": "value",
+    "condition": "cont not in ['SCTAS.INE','ZC.ZCE']"
+  },
+  "result": {
+    "dbName": "dfs://factorEva",
+    "icTbName": "factorIC",
+    "quTbName": "factorQU"
+  },
+  "config": {
+    "startDate": "20210101",
+    "endDate": null,
+    "dailyFreq": true,
+    "callBackPeriod": 1,
+    "returnIntervals": [5, 10, 20],   // 分层回测调仓周期K = IC法未来K日收益率
+    "quantile": 5,
+    "dailyPnlLimit": 0.1,
+    "useMinFreqPeriod": false,
+    "barRetLabelName": "ret",
+    "futRetLabelNames": ["ret5D","ret10D","ret20D"]  // 需要和上面returnIntervals的顺序一致
+  }
+}
