@@ -5,6 +5,39 @@ from src.entity.Source import Source
 class Result(Source):
     def __init__(self, session: ddb.session):
         super().__init__(session)
-        self.resultDB = ""
-        self.resultTB = ""
-        self.re
+        self.startDate: pd.Timestamp = None
+        self.endDate: pd.Timestamp = None
+        self.dailyFreq: bool = True
+        self.callBackPeriod: int = 1
+        self.returnIntervals: List[int] = []
+        self.quantile: int = 5
+        self.dailyPnlLimit: float = 0.1
+        self.useMinFreqPeriod: bool = False
+        self.barRetLabelName: str = ""
+        self.futRetLabelNames: List[str] = []
+
+    def setConfig(self, config: Dict):
+        """初始化结果配置项"""
+        self.startDate = pd.Timestamp(config["start_date"]) if config["start_date"] is not None else pd.Timestamp("20200101")
+        self.endDate = pd.Timestamp(config["end_date"]) if config["end_date"] is not None else pd.Timestamp.now().date()
+        self.dailyFreq = config["dailyFreq"]
+        self.callBackPeriod = int(config["callBackPeriod"])
+        self.returnIntervals = [int(i) for i in config["returnIntervals"]]
+        self.quantile = int(config["quantile"])
+        self.dailyPnlLimit = float(config["dailyPnlLimit"])
+        self.useMinFreqPeriod = config["useMinFreqPeriod"]
+        self.barRetLabelName = config["barRetLabelName"]
+        self.futRetLabelNames = config["futRetLabelNames"]
+
+    def initResDB(self, dropDB: bool = False):
+        """
+        创建结果数据库
+        """
+        if dropDB:
+            self.session.dropDatabase(self.resultDBName)
+        colName = ["symbol","TradeDate"] + [self.]
+        colType = []
+        self.session.run(f"""
+            db=database("{self.resultDBName}",RANGE,2010.01M+(0..30)*12,engine="TSDB")
+            schemaTb=table(1:0,{colName}, {colType})
+        """)
