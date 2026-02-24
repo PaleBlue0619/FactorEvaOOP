@@ -1,5 +1,6 @@
 import pandas as pd
 import dolphindb as ddb
+from typing import Dict, List
 from src.entity.Source import Source
 
 class Result(Source):
@@ -33,11 +34,21 @@ class Result(Source):
         """
         创建结果数据库
         """
-        if dropDB:
+        if dropDB and self.session.existsDatabase(self.resultDBName):
             self.session.dropDatabase(self.resultDBName)
-        colName = ["symbol","TradeDate"] + [self.]
-        colType = []
-        self.session.run(f"""
-            db=database("{self.resultDBName}",RANGE,2010.01M+(0..30)*12,engine="TSDB")
-            schemaTb=table(1:0,{colName}, {colType})
-        """)
+        if not self.session.existsTable(dbUrl=self.resultDBName, tableName=self.resultTBName_Qua):
+            colName = ["factor","returnInterval","period"]+["quantileReturn"+str(i) for i in range(1, self.quantile+1)]+["tradeTime"]
+            colType = ["SYMBOL","INT","INT"]+["DOUBLE"]*self.quantile+["TIMESTAMP"]
+            self.session.run(f"""
+            db=database("{self.resultDBName}",RANGE,2010.01M+(0..30)*12,engine="OLAP")
+            schemaTb=table(1:0,{colName}, {colType});
+            t=db.createDimensionTable(table=schemaTb, tableName="{self.resultTBName_Qua}")
+            """)    # DolphinDB 维度表 - 分层回测
+        if not self.session.existsTable(dbUrl=self.resultDBName, tableName=self.resultDBName_Reg):
+            colName = ["factor","returnInterval","period","indicator","value","tradeTime"]
+            colType = ["SYMBOL","INT","INT","SYMBOL","DOUBLE","TIMESTAMP"]
+            self.session.run(f"""
+                db=database("{self.resultDBName}");
+                schemaTb=table(1:0,{colName},{colType});
+                t=db.createDimensionTable(table=schemaTb,tableName="{self.resultDBName_Reg}")
+            """)

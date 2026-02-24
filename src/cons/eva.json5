@@ -20,8 +20,8 @@
   },
   "result": {
     "dbName": "dfs://factorEva",
-    "icTbName": "factorIC",
-    "quTbName": "factorQU"
+    "regTbName": "regRes",
+    "quaTbName": "quaRes"
   },
   "config": {
     "startDate": "20210101",

@@ -25,8 +25,8 @@ class Source:
         self.dataDateCol: str = "tradeDate"
         self.dataSymbolCol: str = "symbol"
         self.resultDBName: str = ""
-        self.resultTBName_IC: str = ""
-        self.resultTBName_QU: str = ""
+        self.resultDBName_Reg: str = ""
+        self.resultTBName_Qua: str = ""
 
     def init(self, factorDict: Dict[str, str], labelDict: Dict[str, str], resultDict: Dict[str, str]):
         self.factorDBName = factorDict["dbName"]
@@ -44,8 +44,8 @@ class Source:
         self.labelValueCol = labelDict["valueCol"]
         self.labelCondition = labelDict["condition"]
         self.resultDBName = resultDict["dbName"]
-        self.resultTBName_IC = resultDict["icTbName"]   # IC结果表
-        self.resultTBName_QU = resultDict["quTbName"]   # 分层回测(Quantile BackTest 结果表)
+        self.resultDBName_Reg = resultDict["regTbName"]   # IC结果表
+        self.resultTBName_Qua = resultDict["quaTbName"]   # 分层回测(Quantile BackTest 结果表)
 
     def getFactorList(self) -> List[str]:
         """
