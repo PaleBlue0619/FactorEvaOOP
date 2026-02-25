@@ -24,8 +24,10 @@ class Source:
         self.labelCondition: str = ""
         self.dataDateCol: str = "tradeDate"
         self.dataSymbolCol: str = "symbol"
+        self.dataObjName: str = "dataObj_"
         self.resultDBName: str = ""
-        self.resultDBName_Reg: str = ""
+        self.combineTBName: str = ""
+        self.resultTBName_Reg: str = ""
         self.resultTBName_Qua: str = ""
 
     def init(self, factorDict: Dict[str, str], labelDict: Dict[str, str], resultDict: Dict[str, str]):
@@ -44,7 +46,7 @@ class Source:
         self.labelValueCol = labelDict["valueCol"]
         self.labelCondition = labelDict["condition"]
         self.resultDBName = resultDict["dbName"]
-        self.resultDBName_Reg = resultDict["regTbName"]   # IC结果表
+        self.resultTBName_Reg = resultDict["regTbName"]   # IC结果表
         self.resultTBName_Qua = resultDict["quaTbName"]   # 分层回测(Quantile BackTest 结果表)
 
     def getFactorList(self) -> List[str]:
@@ -76,8 +78,8 @@ class Source:
                 symbolList: List[str] = None,
                 labelList: List[str] = None,
                 factorList: List[str] = None
-                ) -> pd.DataFrame:
-        """获取完整的数据集 -> startDate & endDate
+                ) -> None:
+        """获取完整的数据集 -> startDate & endDate -> 存入DolphinDB内存
         通过LabelSource进行获取
         """
         realStartDate = pd.Timestamp(startDate).strftime("%Y.%m.%d")
@@ -96,22 +98,22 @@ class Source:
             endDate = {realEndDate}            
             /* 标签内存表 */
             if (size(symbolList)==0 and size(labelList)==0){{
-                labelDF = select value from loadTable("{self.labelDBName}","{self.labelTBName}") 
+                {self.dataObjName} = select value from loadTable("{self.labelDBName}","{self.labelTBName}") 
                 where {self.labelDateCol} between startDate and endDate and ({self.labelCondition})
                 pivot by {self.labelSymbolCol} as {self.dataSymbolCol}, {self.labelDateCol} as {self.dataDateCol}, {self.labelIndicatorCol}
             }}
             else if(size(symbolList)>0 and size(labelList)==0){{
-                labelDF = select value from loadTable("{self.labelDBName}","{self.labelTBName}") 
+                {self.dataObjName} = select value from loadTable("{self.labelDBName}","{self.labelTBName}") 
                 where ({self.labelDateCol} between startDate and endDate) and {self.labelSymbolCol} in symbolList and ({self.labelCondition})
                 pivot by {self.labelSymbolCol} as {self.dataSymbolCol}, {self.labelDateCol} as {self.dataDateCol}, {self.labelIndicatorCol}
             }}
             else if(size(symbolList)==0 and size(labelList)>0){{
-                labelDF = select value from loadTable("{self.labelDBName}","{self.labelTBName}") 
+                {self.dataObjName} = select value from loadTable("{self.labelDBName}","{self.labelTBName}") 
                 where ({self.labelDateCol} between startDate and endDate) and {self.labelIndicatorCol} in labelList and ({self.labelCondition})
                 pivot by {self.labelSymbolCol} as {self.dataSymbolCol}, {self.labelDateCol} as {self.dataDateCol}, {self.labelIndicatorCol}
             }}
             else{{
-                labelDF = select value from loadTable("{self.labelDBName}","{self.labelTBName}") 
+                {self.dataObjName} = select value from loadTable("{self.labelDBName}","{self.labelTBName}") 
                 where ({self.labelDateCol} between startDate and endDate) and ({self.labelSymbolCol} in symbolList) and ({self.labelIndicatorCol} in labelList) and ({self.labelCondition}) 
                 pivot by {self.labelSymbolCol} as {self.dataSymbolCol}, {self.labelDateCol} as {self.dataDateCol}, {self.labelIndicatorCol}
             }}
@@ -140,10 +142,8 @@ class Source:
 
             /* 进行合并 */
             matchingCols = ["{self.dataSymbolCol}", "{self.dataDateCol}"]
-            labelDF = select * from lj(labelDF, factorDF, matchingCols);
+            {self.dataObjName} = select * from lj({self.dataObjName}, factorDF, matchingCols);
 
-            /* 清理内存并返回结果 */
-            undef(`factorDF)
-            labelDF;
+            /* 清理内存 */
+            undef(`factorDF);
         """.replace("and ()", ""))
-        return data

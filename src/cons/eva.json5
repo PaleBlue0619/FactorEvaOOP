@@ -32,7 +32,7 @@
     "quantile": 5,
     "dailyPnlLimit": 0.1,
     "useMinFreqPeriod": false,
-    "barRetLabelName": "ret",
+    "barRetLabelName": "barRet", // 这里不能和下面的futRetLabelNames里面重名
     "futRetLabelNames": ["ret5D","ret10D","ret20D"]  // 需要和上面returnIntervals的顺序一致
   }
 }
