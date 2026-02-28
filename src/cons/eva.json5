@@ -6,7 +6,7 @@
     "symbolCol": "symbol",
     "indicatorCol": "factor",
     "valueCol": "value",
-    "condition": "symbol not in ['SCTAS.INE','ZC.ZCE']"
+    "condition": "split(symbol,'.')[0] in ['CF','SR','TA','FG','RM','SM','SF','MA','CY','AP','CJ','UR','SA','PF','PK','SH','PX','A','M','C','B','Y','P','V','JD','FB','PP','CS','EG','RR','EB','PG','LH','LU','FU','RB','WR','BU','HC','SP','SS','AO','BR','SI','LC']"
   },
   "label": {
     "dbName": "dfs://dayLabel",
@@ -16,7 +16,7 @@
     "symbolCol": "cont",
     "indicatorCol": "label",
     "valueCol": "value",
-    "condition": "cont not in ['SCTAS.INE','ZC.ZCE']"
+    "condition": "split(cont, '.')[0] in ['CF','SR','TA','FG','RM','SM','SF','MA','CY','AP','CJ','UR','SA','PF','PK','SH','PX','A','M','C','B','Y','P','V','JD','FB','PP','CS','EG','RR','EB','PG','LH','LU','FU','RB','WR','BU','HC','SP','SS','AO','BR','SI','LC']"
   },
   "result": {
     "dbName": "dfs://factorEva",
@@ -28,11 +28,11 @@
     "endDate": null,
     "dailyFreq": true,
     "callBackPeriod": 1,
-    "returnIntervals": [5, 10, 20],   // 分层回测调仓周期K = IC法未来K日收益率
+    "returnIntervals": [1, 3, 5, 10, 20],   // 分层回测调仓周期K = IC法未来K日收益率
     "quantile": 5,
     "dailyPnlLimit": 0.1,
     "useMinFreqPeriod": false,
     "barRetLabelName": "barRet", // 这里不能和下面的futRetLabelNames里面重名
-    "futRetLabelNames": ["ret5D","ret10D","ret20D"]  // 需要和上面returnIntervals的顺序一致
+    "futRetLabelNames": ["ret1D","ret3D","ret5D","ret10D","ret20D"]  // 需要和上面returnIntervals的顺序一致
   }
 }

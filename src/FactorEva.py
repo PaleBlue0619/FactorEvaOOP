@@ -58,7 +58,7 @@ class FactorEva(Eva, Stats):
 
 if __name__ == "__main__":
     session = ddb.session("localhost", 8848, "admin", "123456")
-    with open(r"D:\DolphinDB\Project\FactorEva_v1\src\cons\eva.json5", "r", encoding="utf-8") as f:
+    with open(r"E:\Quant\FactorEva\src\cons\eva.json5", "r", encoding="utf-8") as f:
         evaCfg = json5.load(f)
     # FactorEva.run(cfg=evaCfg, factorList=None, dropDB=True)
     FactorEva.factorPlot(cfg=evaCfg, factorList=None)
