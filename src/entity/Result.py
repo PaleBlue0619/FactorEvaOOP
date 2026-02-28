@@ -124,13 +124,13 @@ class Stats(Result):    # for EvaPlot
         TotalICIR_df = Dict["TotalICIR"]
         TotalRankICIR_df = Dict["TotalRankICIR"]
         st.subheader("All Factors' avg(IC)", divider=True)
-        st.dataframe(data=TotalIC_df)
+        st.dataframe(data=TotalIC_df, height=1000)
         st.subheader("All Factors' avg(RankIC)", divider=True)
-        st.dataframe(data=TotalRankIC_df)
+        st.dataframe(data=TotalRankIC_df, height=1000)
         st.subheader("All Factors' ICIR", divider=True)
-        st.dataframe(data=TotalICIR_df)
+        st.dataframe(data=TotalICIR_df, height=1000)
         st.subheader("All Factors' RankICIR", divider=True)
-        st.dataframe(data=TotalRankICIR_df)
+        st.dataframe(data=TotalRankICIR_df, height=1000)
 
     @lru_cache(maxsize=128)
     def get_factorData(self, factor: str, rInterval: int) -> Dict[str, pd.DataFrame]:

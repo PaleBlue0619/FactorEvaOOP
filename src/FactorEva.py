@@ -61,6 +61,6 @@ if __name__ == "__main__":
     with open(r"E:\Quant\FactorEva\src\cons\eva.json5", "r", encoding="utf-8") as f:
         evaCfg = json5.load(f)
     # FactorEva.run(cfg=evaCfg, factorList=None, dropDB=True)
-    FactorEva.factorPlot(cfg=evaCfg, factorList=None)
-    # FactorEva.summaryPlot(cfg=evaCfg)
+    # FactorEva.factorPlot(cfg=evaCfg, factorList=None)
+    FactorEva.summaryPlot(cfg=evaCfg)
 
