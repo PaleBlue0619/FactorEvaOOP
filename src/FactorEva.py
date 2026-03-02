@@ -60,7 +60,7 @@ if __name__ == "__main__":
     session = ddb.session("localhost", 8848, "admin", "123456")
     with open(r"E:\Quant\FactorEva\src\cons\eva.json5", "r", encoding="utf-8") as f:
         evaCfg = json5.load(f)
-    # FactorEva.run(cfg=evaCfg, factorList=None, dropDB=True)
+    FactorEva.run(cfg=evaCfg, factorList=["ret5D_ICComp"], dropDB=False)
     # FactorEva.factorPlot(cfg=evaCfg, factorList=None)
     FactorEva.summaryPlot(cfg=evaCfg)
 
